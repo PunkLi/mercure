@@ -11,7 +11,7 @@ MercureDriver::MercureDriver()
   
   status_ = GX_STATUS_SUCCESS;
   device_ = NULL;  
-  g_i64ColorFilter = GX_COLOR_FILTER_NONE;
+  colorfilter_ = GX_COLOR_FILTER_NONE;
   init();
 
 }
@@ -28,7 +28,6 @@ GX_STATUS MercureDriver::init()
       return status_;
     }
 
-    //step2 Get device enumerated number
     status_ = GXUpdateDeviceList(&ui32DeviceNum, 1000);
     if(status_ != GX_STATUS_SUCCESS)
     { 
@@ -55,11 +54,11 @@ GX_STATUS MercureDriver::init()
     
     GetVision();
 
-    status_ = GXGetEnum(device_, GX_ENUM_PIXEL_COLOR_FILTER, &g_i64ColorFilter);
+    status_ = GXGetEnum(device_, GX_ENUM_PIXEL_COLOR_FILTER, &colorfilter_);
     GX_VERIFY_EXIT(status_);
     
-    status_ = GXGetInt(device_, GX_INT_PAYLOAD_SIZE, &g_nPayloadSize);
-    g_pRGBImageBuf = new unsigned char[g_nPayloadSize * 3]; 
+    status_ = GXGetInt(device_, GX_INT_PAYLOAD_SIZE, &payloadsize_);
+    
 
     GX_VERIFY(status_);
 
@@ -106,11 +105,10 @@ GX_STATUS MercureDriver::init()
     int64_t i64Entry = GX_EXPOSURE_AUTO_OFF;
     status_ = GXGetEnum(device_, GX_ENUM_EXPOSURE_AUTO, &i64Entry);
    
-    double dExposureTime = 10000;
+    double dExposureTime = 100; // us
     status_ = GXSetFloat(device_, GX_FLOAT_EXPOSURE_TIME, dExposureTime);
 
-    //Allocate the memory for pixel format transform 
-    //PreForAcquisition();
+    rgbImagebuf_ = new uint8_t[payloadsize_ * 3]; 
 }
 
 GX_STATUS MercureDriver::GetVision()
@@ -148,4 +146,29 @@ GX_STATUS MercureDriver::GetVision()
     ROS_WARN("<Device Version : %s>", pszDeviceVersion);
     delete[] pszDeviceVersion;
     pszDeviceVersion = NULL;
+}
+
+MercureDriver::~MercureDriver()
+{
+    //Release the resources and stop acquisition thread
+    delete[] rgbImagebuf_;
+    rgbImagebuf_ = nullptr;
+
+    //Close device
+    status_ = GXCloseDevice(device_);
+    if(status_ != GX_STATUS_SUCCESS)
+    {
+        //GetErrorString(status_);
+        device_ = nullptr;
+        GXCloseLib();
+        //return status_;
+    }
+
+    //Release libary
+    status_ = GXCloseLib();
+    if(status_ != GX_STATUS_SUCCESS)
+    {
+        //GetErrorString(status_);
+        //return status_;
+    }
 }
