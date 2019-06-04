@@ -7,6 +7,9 @@ set(CMAKE_BUILD_TYPE Release)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   roslib
+  cv_bridge
+  image_transport
+  
 )
 
 find_package(OpenCV REQUIRED)
