@@ -3,7 +3,7 @@
 
 int main()
 {
-    MercureDriver driver;
+    camera::MercureDriver driver;
 
     driver.ReadCamera();
 
