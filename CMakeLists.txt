@@ -1,4 +1,4 @@
-project(mercure)
+project(roborts_camera)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -20,15 +20,15 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+add_subdirectory(mercure)
+
 add_executable(${PROJECT_NAME}_node
-  main.cpp 
-  mercure/mercure_driver.cpp
+  test/main.cpp 
 )
 
 target_link_libraries(${PROJECT_NAME}_node
   PRIVATE
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
-  gxiapi
-  pthread
+  mercure_driver
 )

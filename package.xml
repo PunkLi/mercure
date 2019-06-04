@@ -1,5 +1,5 @@
 <package>
-    <name>mercure</name>
+    <name>roborts_camera</name>
     <version>1.0.0</version>
     <description>
         The roborts camera package provides mercure camera driver for RoboMaster Robot

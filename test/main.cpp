@@ -1,5 +1,5 @@
 
-#include "mercure/mercure_driver.h"
+#include "../mercure/mercure_driver.h"
 
 int main()
 {
