@@ -4,9 +4,9 @@
 int main(int argc, char **argv)
 {
    ros::init(argc, argv, "image_publisher");
-    camera::MercureDriver driver;
+   camera::MercureDriver driver;
 
-    driver.ReadCamera();
+   driver.ReadCamera();
 
     return 0;
 }

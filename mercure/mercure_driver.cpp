@@ -13,10 +13,10 @@ MercureDriver::MercureDriver():
     device_(nullptr),
     pFrameBuffer_(nullptr),
     bufferNum_(3),
-    nh_("mercure_camera")
+    nh_("camera")
 { 
   image_transport::ImageTransport it(nh_);
-  img_pubs_       = it.advertise("camera/mercure", 1);
+  img_pubs_       = it.advertise("mercure", 1);
 
   init_sdk();
   LoadParam();
@@ -273,7 +273,7 @@ void MercureDriver::ReadCamera()
 
       img_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", Image_).toImageMsg();
 
-      img_msg->header.frame_id = "Mercure";
+      img_msg->header.frame_id = "mercure";
       img_msg->header.stamp    = ros::Time::now();
       img_pubs_.publish(img_msg);
       
